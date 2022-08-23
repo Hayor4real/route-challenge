@@ -10,7 +10,54 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 function App() {
-  return <div className='App'></div>;
+  const [posts, setPost] = useState([
+    {
+      id: 1,
+      title: 'My First Post',
+      datetime: 'August 21, 2022 19:20 PM',
+      body: 'this is the body section where you ahve everything you need to know about the body',
+    },
+    {
+      id: 2,
+      title: 'My First Post',
+      datetime: 'August 21, 2022 19:20 PM',
+      body: 'this is the body section where you ahve everything you need to know about the body',
+    },
+    {
+      id: 3,
+      title: 'My First Post',
+      datetime: 'August 21, 2022 19:20 PM',
+      body: 'this is the body section where you ahve everything you need to know about the body',
+    },
+    {
+      id: 4,
+      title: 'My First Post',
+      datetime: 'August 21, 2022 19:20 PM',
+      body: 'this is the body section where you ahve everything you need to know about the body',
+    },
+  ]);
+  const [search, setSearch] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  return (
+    <div className='App'>
+      <Header title='React JS Blog' />
+      <Nav search={search} setSearch={setSearch} />
+      <Switch>
+        <Route exact path='/'>
+          <Home posts={posts} />
+        </Route>
+        <Route exact path='/post'>
+          <NewPost />
+        </Route>
+        <Route path='/post/:id'>
+          <PostPage />
+        </Route>
+        <Route path='/about' component={About} />
+        <Route path='*' component={Missing} />
+      </Switch>
+      <Footer />
+    </div>
+  );
 }
 
 export default App;
