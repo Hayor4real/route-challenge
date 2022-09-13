@@ -6,11 +6,13 @@ import NewPost from './NewPost';
 import PostPage from './PostPage';
 import About from './About';
 import Missing from './Missing';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import api from './api/posts';
-import EditPost from './EditPost'; 
+import EditPost from './EditPost';
+import Post from './Post';
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -20,7 +22,7 @@ function App() {
   const [postBody, setPostBody] = useState('');
   const [editTitle, setEditTitle] = useState('');
   const [editBody, setEditBody] = useState('');
-  const history = useHistory();
+  const history = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -96,38 +98,43 @@ function App() {
   };
   return (
     <div className='App'>
-      <Header title='React JS Blog' />
-      <Nav search={search} setSearch={setSearch} />
-      <Switch>
-        <Route exact path='/'>
-          <Home posts={searchResults} />
-        </Route>
-        <Route exact path='/post'>
-          <NewPost
-            handleSubmit={handleSubmit}
-            postTitle={postTitle}
-            setPostTitle={setPostTitle}
-            postBody={postBody}
-            setPostBody={setPostBody}
-          />
-        </Route>
-        <Route path='/edit/:id'>
-          <EditPost
-            posts={posts}
-            handleEdit={handleEdit}
-            editTitle={editTitle}
-            setEditTitle={setEditTitle}
-            editBody={editBody}
-            setEditBody={setEditBody}
-          />
-        </Route>
-        <Route path='/post/:id'>
-          <PostPage posts={posts} handleDelete={handleDelete} />
-        </Route>
-        <Route path='/about' component={About} />
-        <Route path='*' component={Missing} />
-      </Switch>
-      <Footer />
+      <BrowserRouter>
+        <Header title='React JS Blog' />
+        <Nav search={search} setSearch={setSearch} />
+        <Routes>
+          <Route exact path='/' element={<Home />}>
+            <Home posts={searchResults} />
+          </Route>
+          <Route exact path='/post' element={<Post />}>
+            <NewPost
+              handleSubmit={handleSubmit}
+              postTitle={postTitle}
+              setPostTitle={setPostTitle}
+              postBody={postBody}
+              setPostBody={setPostBody}
+            />
+          </Route>
+          <Route path='/edit/:id' element={<EditPost/>}>
+            <EditPost
+              posts={posts}
+              handleEdit={handleEdit}
+              editTitle={editTitle}
+              setEditTitle={setEditTitle}
+              editBody={editBody}
+              setEditBody={setEditBody}
+            />
+          </Route>
+          <Route path='/post/:id' element={<PostPage />}>
+            <PostPage posts={posts} handleDelete={handleDelete} />
+          </Route>
+
+          <Route path='/about' element={<About />} />
+          <Route path='*' element={<Missing />} />
+          {/* <Route path='/about' component={About} />
+          <Route path='*' component={Missing} /> */}
+        </Routes>
+        <Footer />
+      </BrowserRouter>
     </div>
   );
 }
